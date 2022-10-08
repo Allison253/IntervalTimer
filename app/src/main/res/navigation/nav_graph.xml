@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/timerFragment">
+
+    <fragment
+        android:id="@+id/timerFragment"
+        android:name="com.example.intervaltimer.TimerFragment"
+        android:label="TimerFragment" >
+        <action
+            android:id="@+id/action_timerFragment_to_soundOptionsFragment"
+            app:destination="@id/soundOptionsFragment" />
+        <argument
+            android:name="sound"
+            app:argType="integer" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/soundOptionsFragment"
+        android:name="com.example.intervaltimer.SoundOptionsFragment"
+        android:label="SoundOptionsFragment" >
+        <argument
+            android:name="soundStart"
+            app:argType="integer" />
+    </fragment>
+</navigation>
