@@ -1,27 +1,16 @@
 package com.example.intervaltimer
 
-import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.SoundPool
 import android.os.Build
-import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 
 
-public class SoundManager: Activity(){
+public class SoundManager {
     var mySoundPool:SoundPool
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d("SoundManagerLogz", "On create called")
-    }
+
     init{
         if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP){
             val audioAttributes= AudioAttributes.Builder()
@@ -32,7 +21,7 @@ public class SoundManager: Activity(){
                 .setMaxStreams(10)
                 .setAudioAttributes(audioAttributes)
                 .build()
-            Log.d("SoundManagerLogz","sound Pool intitialized")
+            Log.d("SoundManagerLogz","sound Pool intitialized in soundManager")
         }else{
             Log.d("SoundManagerLogz","else statement called")
             mySoundPool= SoundPool(10, AudioManager.STREAM_DTMF, 1)
@@ -40,5 +29,14 @@ public class SoundManager: Activity(){
 
         }
     }
+    fun load (context:Context, rawID:Int): Int{
+        return mySoundPool.load(context,rawID,1)
+    }
+    public fun playSound(soundID:Int){
+
+        mySoundPool.play(soundID,1F,1F,1,0,1F)
+    }
+
+
 }
 

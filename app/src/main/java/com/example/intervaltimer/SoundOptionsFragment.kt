@@ -1,7 +1,10 @@
 package com.example.intervaltimer
 
 
+import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.SoundPool
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,7 +13,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import com.example.intervaltimer.databinding.FragmentSoundOptionsBinding
 
 
@@ -21,17 +26,19 @@ import com.example.intervaltimer.databinding.FragmentSoundOptionsBinding
  */
 class SoundOptionsFragment : Fragment() {
     private val sharedViewModel:SoundViewModel by activityViewModels()
-    private var _binding:FragmentSoundOptionsBinding?=null
-    private val binding get() = _binding!!
+    private lateinit var binding:FragmentSoundOptionsBinding
+
     private lateinit var radioGroup: RadioGroup
     private lateinit var radioButton1: RadioButton
     private lateinit var radioButton2: RadioButton
     private lateinit var radioButton3: RadioButton
-    //set up sound options
-    var soundID:Int=0
+    var soundID1:Int=0
+    var soundID2:Int=0
 
 
-
+    /**
+     * recreating sound manager for testing purposers
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -41,32 +48,62 @@ class SoundOptionsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         // Inflate the layout for this fragment
-        _binding=FragmentSoundOptionsBinding.inflate(inflater, container, false)
-        return binding.root
+        val fragmentBinding=FragmentSoundOptionsBinding.inflate(inflater,container  ,false)
+            // inflate(inflater, container, false)
+        binding=fragmentBinding
+        return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
+        super.onViewCreated(view, savedInstanceState)
 
-        radioButton1=binding.radioButton1
-        radioButton2=binding.radioButton2
-        radioButton3=binding.radioButton3
-        radioGroup=binding.RadioGroup1
+        binding?.apply{
+            lifecycleOwner=viewLifecycleOwner
+            viewModel=sharedViewModel
+            soundOptionsFragment=this@SoundOptionsFragment
+            Log.d("tracker","binding apply called")
+        }
+
+
+        radioButton1= binding?.radioButton1!!
+        radioButton2=binding?.radioButton2!!
+        radioButton3=binding?.radioButton3!!
+        radioGroup=binding?.RadioGroup1!!
+        binding?.button!!.setOnClickListener{onBackButton(view)}
+
+
+        if (sharedViewModel.hasNoSoundSet()==true){
+
+            radioGroup.check(radioButton1.id)
+        }
+        else{
+            if (sharedViewModel.getSound()==R.raw.beep1){
+                radioGroup.check(radioButton1.id)
+            }
+            else if (sharedViewModel.getSound()==R.raw.tingsha_cymbal){
+                radioGroup.check(radioButton2.id)
+            }
+        }
+
+        soundID1=sharedViewModel.soundPool.load(context,R.raw.beep1,1)
+        soundID2=sharedViewModel.soundPool.load(context,R.raw.tingsha_cymbal,1)
+
+
+
 
         radioGroup.setOnCheckedChangeListener { radioGroup, isChecked ->
             var selectedId=radioGroup.checkedRadioButtonId
-            Log.d("soundOptionsFragment","selectedId="+selectedId)
 
             if (selectedId==radioButton1.id){
                 sharedViewModel.setSound(1)
-                soundID=sharedViewModel.soundPool.load(context,sharedViewModel.getSound(),1)
-                sharedViewModel.soundPool.play(soundID,1F,1F,1,0,1F)
-                Log.d("playSound","playSound= "+soundID)
+                sharedViewModel.soundPool.play(soundID1,1F,1F,5,0,1F)
+
             }else if(selectedId==radioButton2.id){
                 sharedViewModel.setSound(2)
-                soundID=sharedViewModel.soundPool.load(context,sharedViewModel.getSound(),1)
-                sharedViewModel.soundPool.play(soundID,1F,1F,1,0,1F)
-                Log.d("playSound","playSound= "+soundID)
+                sharedViewModel.soundPool.play(soundID2,1F,1F,1,0,1F)
             }
 
 
@@ -75,7 +112,12 @@ class SoundOptionsFragment : Fragment() {
     }
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        Log.d("tracker", "on destroy called")
+    }
+
+    private fun onBackButton(view: View) {
+        val action=SoundOptionsFragmentDirections.actionSoundOptionsFragmentToTimerFragment()
+        view.findNavController().navigate(action)
     }
 
 }

@@ -13,10 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.example.intervaltimer.databinding.FragmentTimerBinding
 import androidx.appcompat.app.AppCompatActivity
-
-
-
-
+import com.example.intervaltimer.databinding.FragmentSoundOptionsBinding
 
 
 class TimerFragment : Fragment() {
@@ -30,6 +27,8 @@ class TimerFragment : Fragment() {
     lateinit var beeps: CountDownTimer
     var isTimerRunning:Boolean=false
     var soundID:Int=0
+    var streamID:Int=0
+    var intervalText:String="00:00"
 
 
     override fun onCreateView(
@@ -38,14 +37,22 @@ class TimerFragment : Fragment() {
     ): View? {
         (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
 
-        binding= FragmentTimerBinding.inflate(inflater,container,false)
-        Log.d("fragment", "GameFragment created/re-created!")
-        return binding.root}
+        val fragmentBinding= FragmentTimerBinding.inflate(inflater,container  ,false)
+        // inflate(inflater, container, false)
+        binding=fragmentBinding
+        return binding!!.root
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
 
         super.onViewCreated(view, savedInstanceState)
+
+        binding?.apply{
+            lifecycleOwner=viewLifecycleOwner
+            viewModel=sharedViewModel
+            soundOptionsFragment=this@TimerFragment
+        }
         Log.d("fragment","View created")
         //set up click listener
         listenChronometer()
@@ -55,7 +62,7 @@ class TimerFragment : Fragment() {
         binding.pauseButton.setOnClickListener{ onPauseButton()}
         binding.resetButton.setOnClickListener{ onResetButton()}
         binding.changeButton.setOnClickListener{ onChangeButton(view)}
-
+        binding.intervalText.setOnClickListener{onChangeInterval(view)}
 
         binding.switch1.setOnCheckedChangeListener { buttonView, isChecked->
             if (isChecked){
@@ -70,10 +77,24 @@ class TimerFragment : Fragment() {
         soundID = sharedViewModel.soundPool.load(context,sharedViewModel.getSound(),1)
         Log.d("fragment","soundID="+soundID)
 
+
+    }
+    //private fun updateIntervalText(){
+        //intervalText=sharedViewModel.getMinutes().toString()+":"+sharedViewModel.getSeconds().toString()
+    //}
+
+    private fun onChangeInterval(view:View){
+        val toChange=TimerFragmentDirections.actionTimerFragmentToSetIntervalFragment()
+        view.findNavController().navigate(toChange)
+
     }
 
     private fun onChangeButton(view: View) {
-        val action=TimerFragmentDirections.actionTimerFragmentToSoundOptionsFragment(soundStart=R.raw.beep1)
+        var startSound=R.raw.beep1
+        if (sharedViewModel.hasNoSoundSet()==false){
+            startSound=sharedViewModel.getSound()
+        }
+        val action=TimerFragmentDirections.actionTimerFragmentToSoundOptionsFragment(startSound)
         view.findNavController().navigate(action)
     }
 
@@ -97,7 +118,7 @@ class TimerFragment : Fragment() {
     override fun onDestroy(){
         Log.d("fragment","fragment destroyed")
         super.onDestroy()
-        sharedViewModel.soundPool.release()
+        //sharedViewModel.soundPool.release()
     }
 
     private fun TurnScreenOff() {
@@ -108,29 +129,19 @@ class TimerFragment : Fragment() {
     //on startbutton click
     private fun onStartButton(){
         try {
-            var test1: Int=0
-            var test2:Int=0
-            if (binding.intervalNum1.text.toString()!=""){
-                test1=Integer.parseInt(binding.intervalNum1.text.toString())
-                intervalworked = true
-            }
-            if (binding.intervalNum2.text.toString()!=""){
-                test2=Integer.parseInt(binding.intervalNum2.text.toString())
-                intervalworked = true
-            }
-            interval=test1*60+test2
+            interval=sharedViewModel.getInterval()
             Log.d("fragment","interval1=" +interval)
+            intervalworked=true
 
         } catch (e: NumberFormatException) {
             Toast.makeText(context, "Error with interval!", Toast.LENGTH_LONG).show()//catch error would occur if text like 'aa' appeared
             intervalworked = false
         }
         if (!running and intervalworked) {//if already running, do nothing
+            Log.d("fragment","not running")
             binding.chronometer.base=SystemClock.elapsedRealtime() - pauseOffset
             binding.chronometer.start()
             running = true
-        }else{
-            Toast.makeText(context, "You did not set an interval!", Toast.LENGTH_LONG).show()
         }
 
 
@@ -145,6 +156,7 @@ class TimerFragment : Fragment() {
             running = false
 
         }
+        sharedViewModel.soundPool.stop(streamID) //if sound is playing, stop it
     }
 
     private fun onPauseButton(){
@@ -152,6 +164,8 @@ class TimerFragment : Fragment() {
             binding.chronometer.stop()
             pauseOffset = SystemClock.elapsedRealtime() - binding.chronometer.base
             running = false
+            sharedViewModel.soundPool.stop(streamID) //if sound is playing, stop it
+
         }
     }
 
@@ -177,8 +191,7 @@ class TimerFragment : Fragment() {
 
 
     fun playSound(){
-        sharedViewModel.soundPool.play(soundID,1F,1F,1,0,1F)
-        Log.d("playSound","="+soundID)
+        streamID=sharedViewModel.soundPool.play(soundID,1F,1F,1,0,1F)
     }
 
 

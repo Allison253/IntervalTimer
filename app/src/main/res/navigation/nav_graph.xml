@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph.xml"
     app:startDestination="@id/timerFragment">
 
@@ -11,9 +12,9 @@
         <action
             android:id="@+id/action_timerFragment_to_soundOptionsFragment"
             app:destination="@id/soundOptionsFragment" />
-        <argument
-            android:name="sound"
-            app:argType="integer" />
+        <action
+            android:id="@+id/action_timerFragment_to_setIntervalFragment"
+            app:destination="@id/setIntervalFragment" />
 
     </fragment>
     <fragment
@@ -23,5 +24,17 @@
         <argument
             android:name="soundStart"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_soundOptionsFragment_to_timerFragment"
+            app:destination="@id/timerFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/setIntervalFragment"
+        android:name="com.example.intervaltimer.SetIntervalFragment"
+        android:label="fragment_set_interval"
+        tools:layout="@layout/fragment_set_interval" >
+        <action
+            android:id="@+id/action_setIntervalFragment_to_timerFragment"
+            app:destination="@id/timerFragment" />
+    </dialog>
 </navigation>
