@@ -34,6 +34,7 @@ class SoundOptionsFragment : Fragment() {
     private lateinit var radioButton3: RadioButton
     var soundID1:Int=0
     var soundID2:Int=0
+    var soundID3:Int=0
 
 
     /**
@@ -90,6 +91,7 @@ class SoundOptionsFragment : Fragment() {
 
         soundID1=sharedViewModel.soundPool.load(context,R.raw.beep1,1)
         soundID2=sharedViewModel.soundPool.load(context,R.raw.tingsha_cymbal,1)
+        soundID3=sharedViewModel.soundPool.load(context,R.raw.four_beeps,1)
 
 
 
@@ -104,6 +106,9 @@ class SoundOptionsFragment : Fragment() {
             }else if(selectedId==radioButton2.id){
                 sharedViewModel.setSound(2)
                 sharedViewModel.soundPool.play(soundID2,1F,1F,1,0,1F)
+            }else if(selectedId==radioButton3.id){
+                sharedViewModel.setSound(3)
+                sharedViewModel.soundPool.play(soundID3,1F,1F,1,0,1F)
             }
 
 

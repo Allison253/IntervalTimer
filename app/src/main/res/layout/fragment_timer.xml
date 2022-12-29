@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:textSize="40sp"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toTopOf="@+id/startButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -71,10 +72,12 @@
             android:id="@+id/label1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:layout_marginTop="35dp"
+            android:layout_marginEnd="55dp"
             android:text="@string/interval"
+            android:textColor="@color/black"
             android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -82,30 +85,19 @@
             android:id="@+id/intervalText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="35dp"
             android:text="@{viewModel.intervalAsString}"
             android:textAlignment="center"
+            android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@+id/label1"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Switch
-            android:id="@+id/switch1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="60dp"
-            android:checked="true"
-            android:minHeight="48dp"
-            android:text="Keep Screen On?"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
         <Button
             android:id="@+id/changeButton"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
+            android:layout_width="24dp"
+            android:layout_height="28dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
             android:background="@drawable/settings_icon"

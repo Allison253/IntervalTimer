@@ -3,11 +3,11 @@
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="reset">Reset</string>
-    <string name="interval">Enter Interval</string>
+    <string name="interval">Interval:</string>
     <string name="colon">00:00</string>
     <string name="sound1">Beep</string>
     <string name="sound2">Chime</string>
-    <string name="sound3">Three Beeps</string>
+    <string name="sound3">Four Beeps</string>
     <string name="SoundQ">Sound Options:</string>
     <string name="changeButton">Change Sound</string>
     <!-- TODO: Remove or change this placeholder text -->

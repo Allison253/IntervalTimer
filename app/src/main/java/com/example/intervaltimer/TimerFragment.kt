@@ -29,6 +29,7 @@ class TimerFragment : Fragment() {
     var soundID:Int=0
     var streamID:Int=0
     var intervalText:String="00:00"
+    var isShifted:Boolean=false
 
 
     override fun onCreateView(
@@ -55,7 +56,9 @@ class TimerFragment : Fragment() {
         }
         Log.d("fragment","View created")
         //set up click listener
-        listenChronometer()
+
+
+
         KeepScreenOn()
         //set up button clicks
         binding.startButton.setOnClickListener{ onStartButton()}
@@ -63,25 +66,14 @@ class TimerFragment : Fragment() {
         binding.resetButton.setOnClickListener{ onResetButton()}
         binding.changeButton.setOnClickListener{ onChangeButton(view)}
         binding.intervalText.setOnClickListener{onChangeInterval(view)}
+        binding.chronometer.setOnClickListener{onChangeInterval(view)}
 
-        binding.switch1.setOnCheckedChangeListener { buttonView, isChecked->
-            if (isChecked){
-                KeepScreenOn()
-            }else{
-                TurnScreenOff()
-            }
-        }
         if (sharedViewModel.hasNoSoundSet()){
             sharedViewModel.setSound(1)
         }
         soundID = sharedViewModel.soundPool.load(context,sharedViewModel.getSound(),1)
-        Log.d("fragment","soundID="+soundID)
-
 
     }
-    //private fun updateIntervalText(){
-        //intervalText=sharedViewModel.getMinutes().toString()+":"+sharedViewModel.getSeconds().toString()
-    //}
 
     private fun onChangeInterval(view:View){
         val toChange=TimerFragmentDirections.actionTimerFragmentToSetIntervalFragment()
@@ -102,6 +94,9 @@ class TimerFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         Log.d("fragment","fragment stopped")
+
+        TurnScreenOff()
+        //start hard timer, no chronometer
         if (running){
             timer(true)
         }
@@ -109,15 +104,17 @@ class TimerFragment : Fragment() {
 
     override fun onResume(){
         super.onResume()
+        KeepScreenOn()
         Log.d("fragment", "fragment resumed")
         if (isTimerRunning){
             beeps.cancel()
         }
-
     }
     override fun onDestroy(){
         Log.d("fragment","fragment destroyed")
+        TurnScreenOff()
         super.onDestroy()
+
         //sharedViewModel.soundPool.release()
     }
 
@@ -130,7 +127,6 @@ class TimerFragment : Fragment() {
     private fun onStartButton(){
         try {
             interval=sharedViewModel.getInterval()
-            Log.d("fragment","interval1=" +interval)
             intervalworked=true
 
         } catch (e: NumberFormatException) {
@@ -138,10 +134,16 @@ class TimerFragment : Fragment() {
             intervalworked = false
         }
         if (!running and intervalworked) {//if already running, do nothing
-            Log.d("fragment","not running")
             binding.chronometer.base=SystemClock.elapsedRealtime() - pauseOffset
             binding.chronometer.start()
             running = true
+
+            if (sharedViewModel.getShift()==true){
+                listenChronometer(interval-3)
+                Log.d("fourBeeps", "first callewd")
+            }else{
+                listenChronometer(0)
+            }
         }
 
 
@@ -169,7 +171,7 @@ class TimerFragment : Fragment() {
         }
     }
 
-    private fun listenChronometer() {
+    private fun listenChronometer(target:Int) {
         binding.chronometer.setOnChronometerTickListener {
             chronoText = binding.chronometer.getText().toString()
             var units = chronoText.split(":")
@@ -178,14 +180,18 @@ class TimerFragment : Fragment() {
             var duration = 60 * minutes + seconds
             var remain = duration % interval
 
+
+            Log.d("fourBeep", "target="+target.toString())
             if (duration != 0) {
-                if (remain == 0) {
+                if (remain == target) {
                     playSound()
                 }
             }
 
         }
     }
+
+
 
 
 

@@ -25,6 +25,9 @@ class SoundViewModel : ViewModel() {
     private val _intervalAsString=MutableLiveData<String>("00:00")
     val intervalAsString=_intervalAsString
 
+    private val _shift=MutableLiveData<Boolean>(false)
+    val shift=_shift
+
     val soundPool=SoundManager().mySoundPool
 
 
@@ -32,12 +35,18 @@ class SoundViewModel : ViewModel() {
         if (soundOption==1){
             Log.d(ViewMOD,"first if")
             _sound.value=R.raw.beep1
+            _shift.value=false
         }else if(soundOption==2){
             Log.d(ViewMOD,"second if")
             _sound.value=R.raw.tingsha_cymbal
-        }else{
+            _shift.value=false
+        }else if (soundOption==3){
             Log.d(ViewMOD,"third if")
-           _sound.value=R.raw.beep1
+           _sound.value=R.raw.four_beeps
+           _shift.value=true
+        }else{
+            _sound.value=R.raw.beep1
+            _shift.value=false
         }
     }
     fun getSound(): Int {
@@ -45,6 +54,9 @@ class SoundViewModel : ViewModel() {
     }
     fun hasNoSoundSet():Boolean{
         return _sound.value==null
+    }
+    fun getShift():Boolean{
+        return shift.value!!
     }
 
     fun setInterval(intervalMin:Int,intervalSecs:Int){
