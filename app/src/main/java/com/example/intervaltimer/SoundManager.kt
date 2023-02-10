@@ -6,9 +6,10 @@ import android.media.AudioManager
 import android.media.SoundPool
 import android.os.Build
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 
 
-public class SoundManager {
+public class SoundManager:AppCompatActivity() {
     var mySoundPool:SoundPool
 
     init{
@@ -32,6 +33,7 @@ public class SoundManager {
     fun load (context:Context, rawID:Int): Int{
         return mySoundPool.load(context,rawID,1)
     }
+
     public fun playSound(soundID:Int){
 
         mySoundPool.play(soundID,1F,1F,1,0,1F)

@@ -1,10 +1,11 @@
 package com.example.intervaltimer
 
+import android.app.Application
+import android.content.Context
 import android.media.SoundPool
+import android.os.CountDownTimer
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import java.util.*
 
 private const val ViewMOD="viewMod"
@@ -30,24 +31,33 @@ class SoundViewModel : ViewModel() {
 
     val soundPool=SoundManager().mySoundPool
 
+    lateinit var beeps: CountDownTimer
 
+    private val _clockRunning=MutableLiveData<Boolean>(false) //both offscreen clock and chronometer
+    val clockRunning=_clockRunning
+
+    private val _clockOffset=MutableLiveData<Long>(0)
+    val clockOffset=_clockOffset
+
+    private val _chronoBase=MutableLiveData<Long>()
+    val chronoBase=_chronoBase
+
+    //sound Options and setting timer offset
     fun setSound(soundOption:Int){
         if (soundOption==1){
-            Log.d(ViewMOD,"first if")
             _sound.value=R.raw.beep1
             _shift.value=false
         }else if(soundOption==2){
-            Log.d(ViewMOD,"second if")
             _sound.value=R.raw.tingsha_cymbal
             _shift.value=false
         }else if (soundOption==3){
-            Log.d(ViewMOD,"third if")
            _sound.value=R.raw.four_beeps
            _shift.value=true
         }else{
             _sound.value=R.raw.beep1
             _shift.value=false
         }
+
     }
     fun getSound(): Int {
         return sound.value!!
@@ -59,6 +69,7 @@ class SoundViewModel : ViewModel() {
         return shift.value!!
     }
 
+    //interval setup
     fun setInterval(intervalMin:Int,intervalSecs:Int){
         _minutes.value=intervalMin
         _seconds.value=intervalSecs
@@ -70,7 +81,6 @@ class SoundViewModel : ViewModel() {
         }else{
             _intervalAsString.value= "$intervalMin:$intervalSecs"
         }
-        Log.d(ViewMOD,"interval as string="+intervalAsString)
 
     }
 
@@ -78,19 +88,32 @@ class SoundViewModel : ViewModel() {
         return interval.value!!
     }
 
-    fun hasNoIntervalSet():Boolean{
-        return _interval.value==null
+    //clock running variables for swapping screens and turning off screens
+
+    fun setClockRunning(input:Boolean){
+        _clockRunning.value=input
     }
 
-    fun getMinutes():Int{
-        return minutes.value!!
+    fun getClockRunning():Boolean{
+        return clockRunning.value!!
     }
 
-    fun getSeconds():Int{
-        return seconds.value!!
+    fun setClockOffset(paused:Long){
+        _clockOffset.value=paused
     }
 
-    fun getIntString():String{
-        return _minutes.value.toString()+":"+_seconds.value.toString()
+    fun getClockOffset():Long{
+        return clockOffset.value!!
     }
+
+    fun setChronoBase(base:Long){
+        _chronoBase.value=base
+
+    }
+
+    fun getChronoBase():Long{
+        return chronoBase.value!!
+    }
+
+
 }

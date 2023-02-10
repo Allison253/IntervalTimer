@@ -8,7 +8,8 @@
     <fragment
         android:id="@+id/timerFragment"
         android:name="com.example.intervaltimer.TimerFragment"
-        android:label="TimerFragment" >
+        android:label="TimerFragment"
+        tools:layout="@layout/fragment_timer">
         <action
             android:id="@+id/action_timerFragment_to_soundOptionsFragment"
             app:destination="@id/soundOptionsFragment" />
@@ -20,10 +21,8 @@
     <fragment
         android:id="@+id/soundOptionsFragment"
         android:name="com.example.intervaltimer.SoundOptionsFragment"
-        android:label="SoundOptionsFragment" >
-        <argument
-            android:name="soundStart"
-            app:argType="integer" />
+        android:label="SoundOptionsFragment"
+        android:parentActivityName="TimerFragment (com.example.intervaltimer)">
         <action
             android:id="@+id/action_soundOptionsFragment_to_timerFragment"
             app:destination="@id/timerFragment" />

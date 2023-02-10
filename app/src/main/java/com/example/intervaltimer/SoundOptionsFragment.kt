@@ -65,7 +65,6 @@ class SoundOptionsFragment : Fragment() {
             lifecycleOwner=viewLifecycleOwner
             viewModel=sharedViewModel
             soundOptionsFragment=this@SoundOptionsFragment
-            Log.d("tracker","binding apply called")
         }
 
 
@@ -115,10 +114,7 @@ class SoundOptionsFragment : Fragment() {
 
         }
     }
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.d("tracker", "on destroy called")
-    }
+
 
     private fun onBackButton(view: View) {
         val action=SoundOptionsFragmentDirections.actionSoundOptionsFragmentToTimerFragment()
