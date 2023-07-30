@@ -10,6 +10,13 @@
     <string name="sound3">Four Beeps</string>
     <string name="SoundQ">Sound Options:</string>
     <string name="changeButton">Change Sound</string>
+    <string name="static_shortcut_label_short">Open</string>
+    <string name="static_shortcut_label_long">Open Timer</string>
+    <string name="static_shortcut_disabled_message">Open Timer Shortcut Disabled</string>
+    <string name="defaultChannel">IntervalTimer default channel</string>
+    <string name="notificationDescription">Notifications from IntervalTimer</string>
+    <string name="deepLinkNotificationTitle">Deep Link</string>
+    <string name="timerRunning">Timer is Running</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

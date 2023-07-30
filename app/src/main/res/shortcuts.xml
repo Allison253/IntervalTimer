@@ -1,0 +1,15 @@
+<shortcuts
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="NewDonutDialogFragment"
+        android:enabled="true"
+        android:shortcutShortLabel="@string/static_shortcut_label_short"
+        android:shortcutLongLabel="@string/static_shortcut_label_long"
+        android:shortcutDisabledMessage=
+            "@string/static_shortcut_disabled_message"
+        android:icon="@drawable/donut_with_sprinkles">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="myapp://navdonutcreator.com/donutcreator" />
+    </shortcut>
+</shortcuts>

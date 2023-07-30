@@ -1,18 +1,34 @@
 package com.example.intervaltimer
 
 import android.app.Application
+import android.app.NotificationManager
 import android.content.Context
 import android.media.SoundPool
 import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.launch
 import java.util.*
 
 private const val ViewMOD="viewMod"
 
-class SoundViewModel : ViewModel() {
+class SoundViewModel: ViewModel() {
+
+
+
     private val _sound= MutableLiveData<Int>()
     val sound: LiveData<Int> = _sound
+
+
+    //initialize
+
+
+
 
     private val _interval=MutableLiveData<Int>(0)
     val interval : LiveData<Int> =_interval
@@ -31,7 +47,10 @@ class SoundViewModel : ViewModel() {
 
     val soundPool=SoundManager().mySoundPool
 
-    lateinit var beeps: CountDownTimer
+    lateinit var beeps: Job
+
+
+    val notificationID: Int=101
 
     private val _clockRunning=MutableLiveData<Boolean>(false) //both offscreen clock and chronometer
     val clockRunning=_clockRunning
@@ -41,6 +60,7 @@ class SoundViewModel : ViewModel() {
 
     private val _chronoBase=MutableLiveData<Long>()
     val chronoBase=_chronoBase
+
 
     //sound Options and setting timer offset
     fun setSound(soundOption:Int){
@@ -91,12 +111,17 @@ class SoundViewModel : ViewModel() {
     //clock running variables for swapping screens and turning off screens
 
     fun setClockRunning(input:Boolean){
+
+
         _clockRunning.value=input
+
     }
 
     fun getClockRunning():Boolean{
-        return clockRunning.value!!
+        return _clockRunning.value!!
+
     }
+
 
     fun setClockOffset(paused:Long){
         _clockOffset.value=paused
@@ -114,6 +139,5 @@ class SoundViewModel : ViewModel() {
     fun getChronoBase():Long{
         return chronoBase.value!!
     }
-
 
 }

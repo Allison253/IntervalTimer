@@ -31,7 +31,7 @@
         android:id="@+id/setIntervalFragment"
         android:name="com.example.intervaltimer.SetIntervalFragment"
         android:label="fragment_set_interval"
-        tools:layout="@layout/fragment_set_interval" >
+        tools:layout="@layout/fragment_set_interval">
         <action
             android:id="@+id/action_setIntervalFragment_to_timerFragment"
             app:destination="@id/timerFragment" />

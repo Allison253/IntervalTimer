@@ -17,13 +17,14 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.intervaltimer.databinding.ActivityMainBinding
 
-
+private const val f="myfragment"
+private const val m="mainActivity"
 public class MainActivity : AppCompatActivity() {
 
-    private lateinit var navController: NavController
-    lateinit var beeps: CountDownTimer
+    lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(m, "MAIN ACTIVITY CREATED")
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -33,23 +34,25 @@ public class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
         setupActionBarWithNavController(navController)
 
+        Notifier.init(this)
     }
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-
-    val textTitle="Notification test"
-    val textContent="Notification content"
-    val CHANNEL_ID="0"
-    var builder = NotificationCompat.Builder(this, CHANNEL_ID)
-        .setSmallIcon(R.drawable.timer_icon)
-        .setContentTitle(textTitle)
-        .setContentText(textContent)
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
+    override fun onNewIntent(intent: Intent?) {
+        Log.d(m, "onNewIntent Called")
+        super.onNewIntent(intent)
+        navController.handleDeepLink(intent)
+    }
 
 }
+
+
+
+
+
+
 
 
 
