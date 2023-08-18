@@ -2,6 +2,7 @@ package com.example.intervaltimer
 
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.SystemClock
@@ -24,7 +25,7 @@ public class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(m, "MAIN ACTIVITY CREATED")
+        Log.d(m, "MAIN ACTIVITY CREATED and build is:"+ Build.VERSION.SDK_INT.toString())
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

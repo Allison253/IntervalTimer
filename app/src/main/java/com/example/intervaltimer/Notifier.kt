@@ -17,13 +17,19 @@ package com.example.intervaltimer
 
 import android.app.*
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.SystemClock.elapsedRealtime
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import java.util.jar.Manifest
 
 /**
  * Utility class for posting notifications.
@@ -36,10 +42,15 @@ object Notifier {
 
     fun init(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+
             val notificationManager =
                 activity.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
             val existingChannel = notificationManager.getNotificationChannel(channelId)
             if (existingChannel == null) {
+                ActivityCompat.requestPermissions(activity,
+                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 101)
+
                 // Create the NotificationChannel
                 val name = activity.getString(R.string.defaultChannel)
                 val importance = NotificationManager.IMPORTANCE_DEFAULT
@@ -73,6 +84,11 @@ object Notifier {
         notificationManager.cancelAll()
         //notification.flags= Notification.FLAG_ONGOING_EVENT, commented this out because if this exists, the notification will not go away on click
         notificationManager.notify(id, notification)
+    }
+
+    fun cancelNotification(context:Context){
+        val notificationManager = NotificationManagerCompat.from(context)
+        notificationManager.cancelAll()
     }
 
 

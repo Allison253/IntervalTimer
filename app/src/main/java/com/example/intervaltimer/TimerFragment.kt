@@ -185,6 +185,8 @@ class TimerFragment : Fragment() {
             if (sharedViewModel.beeps != null){
                 sharedViewModel.beeps!!.cancel()
             }
+            //cancel any notifications
+            Notifier.cancelNotification(requireContext().applicationContext)
 
         }
     }

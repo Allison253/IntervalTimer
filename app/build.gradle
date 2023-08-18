@@ -10,7 +10,7 @@ android {
     compileSdkVersion 33
 
     defaultConfig {
-        applicationId "com.example.intervaltimer"
+        applicationId "com.AllisonApps.intervaltimer"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 1
