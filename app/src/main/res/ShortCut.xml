@@ -1,0 +1,3 @@
+<intent
+    android:action="android.intent.action.VIEW"
+    android:data="myapp://navdonutcreator.com/donutcreator" />
