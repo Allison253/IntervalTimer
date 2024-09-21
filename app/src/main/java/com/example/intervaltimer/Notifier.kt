@@ -83,6 +83,14 @@ object Notifier {
         // Remove prior notifications; only allow one at a time to edit the latest item
         notificationManager.cancelAll()
         //notification.flags= Notification.FLAG_ONGOING_EVENT, commented this out because if this exists, the notification will not go away on click
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            return
+        }
         notificationManager.notify(id, notification)
     }
 

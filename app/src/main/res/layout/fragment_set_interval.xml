@@ -53,7 +53,7 @@
                     android:text=":"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="12sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/popup_window_button"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -82,7 +82,7 @@
                     android:id="@+id/popup_window_button"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="48dp"
                     android:background="@color/dark_blue"
                     android:text="ok"
                     android:textAllCaps="false"
@@ -94,30 +94,33 @@
 
                 <EditText
                     android:id="@+id/minutes"
-                    android:layout_width="35dp"
-                    android:layout_height="30dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_marginEnd="5dp"
                     android:background="@null"
                     android:ems="10"
                     android:hint="00"
-                    android:textAlignment="center"
                     android:inputType="textPersonName"
+                    android:textAlignment="center"
+                    android:textSize="22sp"
                     app:layout_constraintBottom_toTopOf="@+id/popup_window_button"
                     app:layout_constraintEnd_toStartOf="@+id/popup_window_text"
-                    app:layout_constraintTop_toBottomOf="@+id/popup_window_title"/>
+                    app:layout_constraintTop_toBottomOf="@+id/popup_window_title" />
+
                 <EditText
                     android:id="@+id/seconds"
-                    android:layout_width="35dp"
-                    android:layout_height="30dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_marginStart="5dp"
                     android:background="@null"
                     android:ems="10"
                     android:hint="00"
-                    android:textAlignment="center"
                     android:inputType="textPersonName"
+                    android:textAlignment="center"
+                    android:textSize="22sp"
                     app:layout_constraintBottom_toTopOf="@+id/popup_window_button"
                     app:layout_constraintStart_toEndOf="@+id/popup_window_text"
-                    app:layout_constraintTop_toBottomOf="@+id/popup_window_title"/>
+                    app:layout_constraintTop_toBottomOf="@+id/popup_window_title" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

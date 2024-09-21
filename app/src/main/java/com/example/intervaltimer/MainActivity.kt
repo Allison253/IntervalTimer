@@ -47,6 +47,11 @@ public class MainActivity : AppCompatActivity() {
         navController.handleDeepLink(intent)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+    }
+
 }
 
 

@@ -37,9 +37,6 @@ class SoundOptionsFragment : Fragment() {
     var soundID3:Int=0
 
 
-    /**
-     * recreating sound manager for testing purposers
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -85,6 +82,8 @@ class SoundOptionsFragment : Fragment() {
             }
             else if (sharedViewModel.getSound()==R.raw.tingsha_cymbal){
                 radioGroup.check(radioButton2.id)
+            }else{
+                radioGroup.check(radioButton3.id)
             }
         }
 

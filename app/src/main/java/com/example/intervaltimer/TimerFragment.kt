@@ -3,33 +3,35 @@ package com.example.intervaltimer
 
 import android.app.PendingIntent
 import android.app.TaskStackBuilder
+import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock.elapsedRealtime
+import android.preference.PreferenceManager
+import android.preference.PreferenceManager.*
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.example.intervaltimer.databinding.FragmentTimerBinding
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
-import androidx.core.os.bundleOf
-import androidx.fragment.app.viewModels
-import androidx.navigation.NavDeepLinkBuilder
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import com.google.android.gms.common.internal.FallbackServiceBroker
-import kotlinx.coroutines.*
-import java.security.KeyStore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
 
 private const val ost="offScreenTimer"
 private const val dC="debugChrono"
 private const val f="myfragment"
-private const val n="myNoti"
-private const val comp="chronoCompare"
+//private const val n="myNoti"
+//private const val comp="chronoCompare"
 
 
 class TimerFragment : Fragment() {
@@ -41,8 +43,9 @@ class TimerFragment : Fragment() {
     var chronoText: String=""
     var soundID:Int=0
     var streamID:Int=0
-    val CHANNEL_ID="channel_id_example01"
+
     lateinit var pendingIntent: PendingIntent
+
 
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.Default + job)
@@ -51,7 +54,7 @@ class TimerFragment : Fragment() {
     override fun onCreateView(
         inflater:LayoutInflater, container:ViewGroup?,
         savedInstanceState:Bundle?
-    ): View? {
+    ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         //setRetainInstance(true)
         (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
@@ -59,14 +62,14 @@ class TimerFragment : Fragment() {
         // inflate(inflater, container, false)
         binding=fragmentBinding
         Log.d(f, "create view")
-        return binding!!.root
+        return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.apply{
+        binding.apply{
             lifecycleOwner=viewLifecycleOwner
             viewModel=sharedViewModel
             soundOptionsFragment=this@TimerFragment
@@ -121,11 +124,26 @@ class TimerFragment : Fragment() {
                 //MY NEW IDEA TRIED BELOW, just crashes the app, yay
 
 
+        //see if sound exists in saved preferences
+        val sharedPref = this.activity?.getPreferences(Context.MODE_PRIVATE)
+        val tmpSound: Int?=sharedPref?.getInt("mySoundChoice",R.raw.beep1)
+        Log.d("Testing", sharedPref?.getString("Test", "Not Allison").toString())
+        Log.d("Testing", tmpSound.toString())
 
         if (sharedViewModel.hasNoSoundSet()){
-            sharedViewModel.setSound(1)
+            if (tmpSound==R.raw.beep1) {
+                sharedViewModel.setSound(1)
+                //if tmp sound is set...
+            }else if(tmpSound==R.raw.tingsha_cymbal){
+                sharedViewModel.setSound(2)
+            }else{
+                sharedViewModel.setSound(3)
+            }
+
         }
         soundID = sharedViewModel.soundPool.load(context,sharedViewModel.getSound(),1)
+
+        Log.d("Testing", "Made it past sound ID set")
 
     }
 
@@ -182,9 +200,13 @@ class TimerFragment : Fragment() {
             sharedViewModel.setClockOffset(elapsedRealtime() - sharedViewModel.getChronoBase())
             interval=sharedViewModel.getInterval()
             runClock()
-            if (sharedViewModel.beeps != null){
+            if (sharedViewModel.getoffScreenTimer()){
                 sharedViewModel.beeps!!.cancel()
+                sharedViewModel.setoffScreenTimer(false)
             }
+
+
+
             //cancel any notifications
             Notifier.cancelNotification(requireContext().applicationContext)
 
@@ -195,16 +217,39 @@ class TimerFragment : Fragment() {
     //-------------Should not happen but logic for if app is destroyed
     override fun onDestroy(){
         Log.d(f,"fragment destroyed")
-        sharedViewModel.beeps!!.cancel()
+
+        if (sharedViewModel.getoffScreenTimer()){
+            sharedViewModel.beeps!!.cancel()
+            sharedViewModel.setoffScreenTimer(false) //timer cancelled if running
+        }
         TurnScreenOff()
         super.onDestroy()
 
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val sharedPref = this.activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        with (sharedPref.edit()) {
+            putInt("mySoundChoice", sharedViewModel.getSound())
+            putString("Test", "Allison's Test!!")
+            apply()
+        }
+        /*
+        val settings = getDefaultSharedPreferences(context)
+        val editor = settings.edit()
+        editor.putInt("mySoundChoice",sharedViewModel.getSound())
+        editor.commit()*/
+    }
+    /*
+    //Thought i needed this  & save instance state earlier related to stopping and resuming, but I don't think I need it
     companion object{
         const val isRunning_KEY="isRunning_KEY"
         const val lastChronoBase="lastChronoBase"
         const val GETINTERVAL="GETINTERVAL"
     }
+
+
 
     override fun onSaveInstanceState(outState:Bundle) {
         super.onSaveInstanceState(outState)
@@ -217,7 +262,7 @@ class TimerFragment : Fragment() {
 
 
 
-
+*/
 
     //------------------start, stop and pause---------------
     private fun onStartButton(){
@@ -347,6 +392,7 @@ class TimerFragment : Fragment() {
             { playSound() })
 
         sharedViewModel.beeps.start()
+        sharedViewModel.setoffScreenTimer(true) //beeps going
 
 
         //createNotification channel and start timer if user is navigating offscreen
@@ -374,7 +420,8 @@ class TimerFragment : Fragment() {
         }
     }
     /*
-
+    note that this would be pasted with all the initial variables at the beginning of the class
+        val CHANNEL_ID="channel_id_example01"
     */
     //----NOTIFICATIONS DURING TIMER
     //Stop this for now

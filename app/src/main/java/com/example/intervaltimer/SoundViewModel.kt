@@ -27,9 +27,6 @@ class SoundViewModel: ViewModel() {
 
     //initialize
 
-
-
-
     private val _interval=MutableLiveData<Int>(0)
     val interval : LiveData<Int> =_interval
 
@@ -49,16 +46,18 @@ class SoundViewModel: ViewModel() {
 
     lateinit var beeps: Job
 
-
     val notificationID: Int=101
 
     private val _clockRunning=MutableLiveData<Boolean>(false) //both offscreen clock and chronometer
     val clockRunning=_clockRunning
 
+    private val _offScreenTimer=MutableLiveData<Boolean>(false) //both offscreen clock and chronometer
+    val offScreenTimer=_clockRunning
+
     private val _clockOffset=MutableLiveData<Long>(0)
     val clockOffset=_clockOffset
 
-    private val _chronoBase=MutableLiveData<Long>()
+    private val _chronoBase=MutableLiveData<Long>(0)
     val chronoBase=_chronoBase
 
 
@@ -118,7 +117,19 @@ class SoundViewModel: ViewModel() {
     }
 
     fun getClockRunning():Boolean{
-        return _clockRunning.value!!
+        return clockRunning.value!!
+
+    }
+
+    fun setoffScreenTimer(input:Boolean){
+
+
+        _offScreenTimer.value=input
+
+    }
+
+    fun getoffScreenTimer():Boolean{
+        return offScreenTimer.value!!
 
     }
 
