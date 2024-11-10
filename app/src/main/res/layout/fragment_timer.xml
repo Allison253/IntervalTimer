@@ -18,8 +18,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/light_blue"
-
         android:textAlignment="center">
 
         <Chronometer
@@ -27,7 +25,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="140dp"
-            android:textColor="@color/black"
             android:textSize="40sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +37,6 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/btn_background"
             android:text="@string/start"
-            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +49,6 @@
             android:layout_marginTop="20dp"
             android:text="@string/stop"
             android:background="@drawable/btn_background"
-            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
@@ -66,7 +61,6 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/btn_background"
             android:text="@string/reset"
-            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
@@ -79,7 +73,6 @@
             android:layout_marginTop="35dp"
             android:layout_marginEnd="55dp"
             android:text="@string/interval"
-            android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -93,7 +86,6 @@
             android:layout_marginTop="35dp"
             android:text="@{viewModel.intervalAsString}"
             android:textAlignment="center"
-            android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@+id/label1"
             app:layout_constraintTop_toTopOf="parent" />
@@ -105,7 +97,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
             android:background="@drawable/settings_icon"
-            android:textColor="@color/white"
+            android:contentDescription="@string/SettingsButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

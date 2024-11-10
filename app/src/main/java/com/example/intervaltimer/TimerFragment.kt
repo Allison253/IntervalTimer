@@ -7,8 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock.elapsedRealtime
-import android.preference.PreferenceManager
-import android.preference.PreferenceManager.*
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -127,8 +125,6 @@ class TimerFragment : Fragment() {
         //see if sound exists in saved preferences
         val sharedPref = this.activity?.getPreferences(Context.MODE_PRIVATE)
         val tmpSound: Int?=sharedPref?.getInt("mySoundChoice",R.raw.beep1)
-        Log.d("Testing", sharedPref?.getString("Test", "Not Allison").toString())
-        Log.d("Testing", tmpSound.toString())
 
         if (sharedViewModel.hasNoSoundSet()){
             if (tmpSound==R.raw.beep1) {
@@ -143,7 +139,6 @@ class TimerFragment : Fragment() {
         }
         soundID = sharedViewModel.soundPool.load(context,sharedViewModel.getSound(),1)
 
-        Log.d("Testing", "Made it past sound ID set")
 
     }
 
@@ -201,7 +196,7 @@ class TimerFragment : Fragment() {
             interval=sharedViewModel.getInterval()
             runClock()
             if (sharedViewModel.getoffScreenTimer()){
-                sharedViewModel.beeps!!.cancel()
+                sharedViewModel.beeps.cancel()
                 sharedViewModel.setoffScreenTimer(false)
             }
 
@@ -219,7 +214,7 @@ class TimerFragment : Fragment() {
         Log.d(f,"fragment destroyed")
 
         if (sharedViewModel.getoffScreenTimer()){
-            sharedViewModel.beeps!!.cancel()
+            sharedViewModel.beeps.cancel()
             sharedViewModel.setoffScreenTimer(false) //timer cancelled if running
         }
         TurnScreenOff()
@@ -232,7 +227,6 @@ class TimerFragment : Fragment() {
         val sharedPref = this.activity?.getPreferences(Context.MODE_PRIVATE) ?: return
         with (sharedPref.edit()) {
             putInt("mySoundChoice", sharedViewModel.getSound())
-            putString("Test", "Allison's Test!!")
             apply()
         }
         /*
@@ -278,7 +272,7 @@ class TimerFragment : Fragment() {
         if (interval==0){
             Toast.makeText(context, "Interval cannot be set to zero!", Toast.LENGTH_LONG).show()
         }
-        if (!sharedViewModel.getClockRunning() && intervalworked && interval!==0) {//if already running, do nothing
+        if (!sharedViewModel.getClockRunning() && intervalworked && interval!=0) {//if already running, do nothing
 
             runClock()
         }
