@@ -161,11 +161,7 @@ class TimerFragment : Fragment() {
         view.findNavController().navigate(action)
 
     }
-    override fun onStart(){
-        Log.d(f,"on start called")
 
-        super.onStart()
-    }
     //--------------Logic if app is stopped (leave screen or go to settings)----------
     override fun onStop() {
         super.onStop()
@@ -189,9 +185,8 @@ class TimerFragment : Fragment() {
     override fun onResume(){
         super.onResume()
         KeepScreenOn()
-        Log.d(f, "on resume called")
+
         if (sharedViewModel.getClockRunning()){
-            Log.d(f, "clock is running")
             sharedViewModel.setClockOffset(elapsedRealtime() - sharedViewModel.getChronoBase())
             interval=sharedViewModel.getInterval()
             runClock()
@@ -205,7 +200,10 @@ class TimerFragment : Fragment() {
             //cancel any notifications
             Notifier.cancelNotification(requireContext().applicationContext)
 
+        }else{
+            binding.chronometer.base= elapsedRealtime() - sharedViewModel.getClockOffset() //this wil reset again if we run again
         }
+
     }
 
 
@@ -298,8 +296,7 @@ class TimerFragment : Fragment() {
 
     private fun onPauseButton(){
         if (sharedViewModel.getClockRunning()) {
-            Log.d(dC,"Pause Button called and chronometer base="+binding.chronometer.base.toString())
-            Log.d(dC,"System elapsed real time="+ elapsedRealtime().toString())
+
             sharedViewModel.setClockOffset(elapsedRealtime() - binding.chronometer.base)
             stopClock()
         }
@@ -311,7 +308,6 @@ class TimerFragment : Fragment() {
     private fun runClock(){
 
         binding.chronometer.base= elapsedRealtime() - sharedViewModel.getClockOffset()
-        Log.d(dC, "runClock called and base set to:"+binding.chronometer.base.toString())
         binding.chronometer.start()
         sharedViewModel.setClockRunning(true)
         if (sharedViewModel.getShift()==true){
